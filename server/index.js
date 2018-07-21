@@ -11,23 +11,39 @@ app.use(bodyParser.json());
 app.use(express.static(__dirname + '/../client/dist'));
 
 app.get('/search', function(req, res) {
-    // get the search genre     
+  // get the search genre
+  console.log(req.body); 
+  var genre = req.body.genre;
+  // https://www.themoviedb.org/account/signup
 
-    // https://www.themoviedb.org/account/signup
+  // use this endpoint to search for movies by genres, you will need an API key
 
-    // use this endpoint to search for movies by genres, you will need an API key
+  // https://api.themoviedb.org/3/discover/movie
 
-    // https://api.themoviedb.org/3/discover/movie
-
-    // and sort them by horrible votes using the search parameters in the API
+  // and sort them by horrible votes using the search parameters in the API
+  apiHelpers.getBadMovies(genre)
+  .then((data) => {
+    console.log(data);
+    res.send(data);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 });
 
 app.get('/genres', function(req, res) {
-    // make an axios request to get the list of official genres
-    
-    // use this endpoint, which will also require your API key: https://api.themoviedb.org/3/genre/movie/list
+  // make an axios request to get the list of official genres
+  apiHelpers.getGenres()
+  .then((response) => {
+    var genres = response.data;
+    res.send(genres);
+  })
+  .catch((err) => {
+    console.log(err);
+  })
+  // use this endpoint, which will also require your API key: https://api.themoviedb.org/3/genre/movie/list
 
-    // send back
+  // send back
 });
 
 app.post('/save', function(req, res) {
